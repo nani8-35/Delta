@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0-windows</TargetFramework><UseWPF>true</UseWPF><Nullable>enable</Nullable><AllowUnsafeBlocks>true</AllowUnsafeBlocks></PropertyGroup><ItemGroup>
+<Compile Include="../../src/Delta.Native/TypingBuffer.cs" Link="TypingBuffer.cs"/>
+<Compile Include="../../src/Delta.Native/ClipboardCodeWriter.cs" Link="ClipboardCodeWriter.cs"/>
+<Compile Include="../../src/Delta.Native/NativeWindowMethods.cs" Link="NativeWindowMethods.cs"/>
+<Compile Include="../../src/Delta.Native/NativeWindowMethods.Keyboard.cs" Link="NativeWindowMethods.Keyboard.cs"/>
+<Compile Include="../../src/Delta.Native/NativeWindowMethods.Typing.cs" Link="NativeWindowMethods.Typing.cs"/>
+<Compile Include="../../src/Delta.Native/ShortcutCatalog.cs" Link="ShortcutCatalog.cs"/><Compile Include="../../src/Delta.Native/ShortcutKeyState.cs" Link="ShortcutKeyState.cs"/></ItemGroup></Project>

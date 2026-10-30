@@ -1,0 +1,4 @@
+<Project Sdk="Microsoft.NET.Sdk">
+<PropertyGroup><OutputType>WinExe</OutputType><TargetFramework>net10.0-windows</TargetFramework><UseWPF>true</UseWPF><Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings><PublishSingleFile>true</PublishSingleFile><IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract><AssemblyName>Delta-2.1.11-Setup</AssemblyName><Version>2.1.11</Version><Product>Delta Browser 2.1.11</Product><ApplicationIcon>../src/Delta.Native/Assets/icon.ico</ApplicationIcon></PropertyGroup>
+<ItemGroup><EmbeddedResource Include="../outputs/Delta-2.1.11-Windows-x64.zip" LogicalName="Delta.Payload.zip"/></ItemGroup>
+</Project>

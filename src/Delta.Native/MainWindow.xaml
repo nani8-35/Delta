@@ -1,0 +1,76 @@
+<Window x:Class="Delta.Native.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:p="clr-namespace:System.Windows.Controls.Primitives;assembly=PresentationFramework" Title="Delta" Width="1000" Height="620" MinWidth="1" MinHeight="1" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResize" ShowInTaskbar="False" Topmost="True" Background="Transparent" Foreground="#D7E3EF" FontFamily="Segoe UI" FontSize="12" Loaded="WindowLoaded" Closing="WindowClosing" PreviewKeyDown="WindowKeyDown">
+ <Grid ClipToBounds="True">
+ <Border MinWidth="400" MinHeight="300" Background="#101B29" BorderBrush="#2B405A" BorderThickness="1" CornerRadius="8">
+ <Grid>
+  <Grid.RowDefinitions><RowDefinition Height="42"/><RowDefinition Height="50"/><RowDefinition Height="30"/><RowDefinition Height="*"/><RowDefinition Height="24"/></Grid.RowDefinitions>
+  <Grid.ColumnDefinitions><ColumnDefinition Width="168"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+  <Grid Grid.ColumnSpan="2" Background="#192638" MouseLeftButtonDown="DragWindow">
+   <StackPanel Orientation="Horizontal" Margin="10,6,80,6">
+    <StackPanel Orientation="Horizontal" Margin="0,0,12,0" VerticalAlignment="Center"><Image Source="Assets/icon.ico" Width="20" Height="20" Margin="0,0,7,0"/><TextBlock Text="DELTA" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/></StackPanel>
+    <Button Content="Copy" Click="CopyClick" Background="#0B1521"/><Button Content="Paste" Click="PasteClick" Background="#0B1521"/><Button Content="Enter" Click="EnterClick" Background="#0B1521"/>
+    <CheckBox x:Name="ScreenshotAutoSubmitToggle" Content="Screenshot Auto-Submit: ON" FontSize="11" IsChecked="True" VerticalAlignment="Center" Margin="12,0,0,0" ToolTip="ON captures, attaches and sends. OFF attaches only. OCR text auto-submits." Checked="ScreenshotAutoSubmitChanged" Unchecked="ScreenshotAutoSubmitChanged"/>
+    <Button x:Name="OverlayButton" Content="Click-through: OFF" FontSize="11" Margin="12,0,2,0" ToolTip="Alt+P toggles click-through. ON passes mouse clicks to the app beneath." Click="OverlayClick"/>
+   </StackPanel>
+   <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,7,8,7"><Button Content="&#x25A1;" Width="26" Padding="0" Background="#0B1521" ToolTip="Maximize / restore" Click="MaximizeClick"/><Button Content="&#x00D7;" Width="26" Padding="0" Background="#0B1521" ToolTip="Quit Delta" Click="QuitClick"/></StackPanel>
+  </Grid>
+  <Border Grid.Row="1" Grid.RowSpan="3" Background="#121E2D" BorderBrush="#2C425E" BorderThickness="0,1,1,0">
+   <DockPanel>
+    <Button DockPanel.Dock="Bottom" Content="Resize" HorizontalContentAlignment="Left" Margin="8,8,8,10" Click="ResizeClick"/>
+    <StackPanel DockPanel.Dock="Bottom" Margin="8,2,8,0"><StackPanel.Resources><Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}"><Setter Property="Height" Value="24"/><Setter Property="Padding" Value="3,0"/></Style></StackPanel.Resources><Button Content="Screenshot" Click="ScreenshotClick"/><Button Content="sscrop" Click="CropClick"/><Button Content="OCR" Click="OcrClick"/></StackPanel>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+     <StackPanel Margin="8,9,8,0">
+      <StackPanel.Resources><Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}"><Setter Property="Height" Value="24"/><Setter Property="Padding" Value="3,0"/></Style></StackPanel.Resources>
+      <TextBlock Text="Typing Master" Foreground="#329BFF" FontWeight="SemiBold" FontSize="13" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+      <DockPanel><TextBlock Text="Speed" FontWeight="SemiBold"/><TextBlock x:Name="SpeedLabel" Text="90%" HorizontalAlignment="Right"/></DockPanel>
+      <Grid><Grid.ColumnDefinitions><ColumnDefinition Width="24"/><ColumnDefinition Width="*"/><ColumnDefinition Width="24"/></Grid.ColumnDefinitions><Button Content="−" Tag="-3" Click="SpeedStepClick"/><Slider x:Name="Speed" Grid.Column="1" Minimum="1" Maximum="60" Value="54" ValueChanged="SpeedChanged"/><Button Grid.Column="2" Content="+" Tag="3" Click="SpeedStepClick"/></Grid>
+      <DockPanel Margin="0,5,0,0"><TextBlock Text="Opacity" FontWeight="SemiBold"/><TextBlock x:Name="OpacityLabel" Text="50%" HorizontalAlignment="Right"/></DockPanel>
+      <Slider x:Name="WindowOpacity" Minimum="0.1" Maximum="1" Value="0.5" ValueChanged="OpacityChanged"/>
+      <UniformGrid Columns="3"><Button Content="100%" Tag="1" Click="OpacityPreset"/><Button Content="50%" Tag="0.5" Click="OpacityPreset"/><Button Content="10%" Tag="0.1" Click="OpacityPreset"/></UniformGrid>
+      <Button Content="Insert" Click="InsertClick" Margin="2,5,2,2"/><Button Content="Start" Click="StartTypingClick"/><Button Content="Pause" Click="PauseTypingClick"/><Button Content="Reset" Click="ResetTypingClick"/>
+      <CheckBox x:Name="KeyboardToggle" Content="Keyboard" IsChecked="True" ToolTip="ON: type in Delta. OFF: return to your last outside app. Alt+K toggles keyboard routing." Checked="KeyboardChanged" Unchecked="KeyboardChanged"/>
+      <CheckBox x:Name="CursorToggle" Content="Hide Cursor" Checked="CursorChanged" Unchecked="CursorChanged"/>
+      <CheckBox x:Name="VoiceToggle" Content="Voice" ToolTip="Continuous system playback transcription; no microphone. Sends after one second of quiet." Checked="VoiceChanged" Unchecked="VoiceChanged"/>
+      <ProgressBar x:Name="VoiceLevel" Minimum="0" Maximum="1" Height="3" Margin="3,0,3,4" Foreground="#329BFF" ToolTip="System audio level"><ProgressBar.Style><Style TargetType="ProgressBar"><Setter Property="Visibility" Value="Collapsed"/><Style.Triggers><DataTrigger Binding="{Binding ElementName=VoiceToggle,Path=IsChecked}" Value="True"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers></Style></ProgressBar.Style></ProgressBar>
+      <DockPanel><TextBlock Text="Pause" Foreground="#8BA1BA" ToolTip="Request-mode silence wait; Live mode sends after one second of quiet."/><TextBlock x:Name="PauseLabel" Text="1s" Foreground="#8BA1BA" HorizontalAlignment="Right"/></DockPanel>
+      <Slider x:Name="Pause" Minimum="0.3" Maximum="3" Value="1" ValueChanged="PauseChanged"/>
+      <Expander Header="More options" Foreground="#9EB4CE" FontSize="11" Margin="2,5" IsExpanded="False"><StackPanel Margin="0,5,0,0"><Button Content="Voice setup" Click="VoiceSetupClick"/><TextBlock x:Name="VoiceBatchLabel" Text="Live dictation" TextWrapping="Wrap" FontSize="10" Margin="3,3"/><TextBlock x:Name="VoiceStage" Text="Audio off" TextWrapping="Wrap" FontSize="10" Margin="3,3"/><TextBlock x:Name="CaptureProtectionLabel" Text="Capture protection: starting" TextWrapping="Wrap" FontSize="10" Margin="3,3"/><Button Content="Sign out" Click="AccountSignOutClick"/><Button Content="Help" ToolTip="delta@acranix.com" Click="SupportClick"/></StackPanel></Expander>
+     </StackPanel>
+    </ScrollViewer>
+   </DockPanel>
+  </Border>
+  <Grid Grid.Row="1" Grid.Column="1" Background="#172537" Margin="5,6"><Grid.ColumnDefinitions><ColumnDefinition Width="32"/><ColumnDefinition Width="32"/><ColumnDefinition Width="34"/><ColumnDefinition Width="*"/><ColumnDefinition Width="42"/></Grid.ColumnDefinitions>
+   <Button x:Name="BackButton" Content="&#x2190;" FontSize="17" Background="Transparent" BorderThickness="0" ToolTip="Back" IsEnabled="False" Click="BackClick"/><Button x:Name="ForwardButton" Grid.Column="1" Content="&#x2192;" FontSize="17" Background="Transparent" BorderThickness="0" ToolTip="Forward" IsEnabled="False" Click="ForwardClick"/><Button x:Name="RefreshButton" Grid.Column="2" Content="&#x21BB;" FontSize="18" Background="#318FDF" BorderBrush="#418FD0" ToolTip="Refresh (Ctrl+R)" Click="ReloadClick"/>
+   <TextBox x:Name="Address" Grid.Column="3" VerticalContentAlignment="Center" KeyDown="AddressKeyDown" Margin="8,3"/><Button Grid.Column="4" Content="+" FontSize="24" Foreground="#A98BFF" Background="Transparent" BorderThickness="0" Click="NewTabClick"/>
+  </Grid>
+  <UniformGrid x:Name="TabStrip" Rows="1" Grid.Row="2" Grid.Column="1" Background="#25374F"/>
+  <Grid x:Name="BrowserHost" Grid.Row="3" Grid.Column="1" Background="#0C1520"/>
+  <Border Grid.Row="4" Grid.ColumnSpan="2" Background="#284463" CornerRadius="0,0,7,7"><DockPanel Margin="9,2"><TextBlock DockPanel.Dock="Right" Foreground="#B6CDE5" Margin="12,0,0,0"><Run Text="Speed: "/><Run Text="{Binding ElementName=SpeedLabel,Path=Text}"/></TextBlock><TextBlock x:Name="Status" Text="Starting Delta..." TextTrimming="CharacterEllipsis"/></DockPanel></Border>
+ </Grid>
+ </Border>
+ <Grid x:Name="ResizeHandles">
+  <Grid.Resources>
+   <Style TargetType="{x:Type p:Thumb}">
+    <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="{x:Type p:Thumb}"><Border Background="Transparent"/></ControlTemplate></Setter.Value></Setter>
+   </Style>
+  </Grid.Resources>
+  <p:Thumb x:Name="ResizeLeft" Tag="L" Width="6" HorizontalAlignment="Left" Margin="0,10,0,10" Cursor="SizeWE" DragDelta="ResizeDrag"/>
+  <p:Thumb x:Name="ResizeRight" Tag="R" Width="6" HorizontalAlignment="Right" Margin="0,10,0,10" Cursor="SizeWE" DragDelta="ResizeDrag"/>
+  <p:Thumb x:Name="ResizeTop" Tag="T" Height="6" VerticalAlignment="Top" Margin="10,0,10,0" Cursor="SizeNS" DragDelta="ResizeDrag"/>
+  <p:Thumb x:Name="ResizeBottom" Tag="B" Height="6" VerticalAlignment="Bottom" Margin="10,0,10,0" Cursor="SizeNS" DragDelta="ResizeDrag"/>
+  <p:Thumb x:Name="ResizeTopLeft" Tag="LT" Width="10" Height="10" HorizontalAlignment="Left" VerticalAlignment="Top" Cursor="SizeNWSE" DragDelta="ResizeDrag"/>
+  <p:Thumb x:Name="ResizeTopRight" Tag="RT" Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="SizeNESW" DragDelta="ResizeDrag"/>
+  <p:Thumb x:Name="ResizeBottomLeft" Tag="LB" Width="10" Height="10" HorizontalAlignment="Left" VerticalAlignment="Bottom" Cursor="SizeNESW" DragDelta="ResizeDrag"/>
+  <p:Thumb x:Name="ResizeBottomRight" Tag="RB" Width="10" Height="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Cursor="SizeNWSE" DragDelta="ResizeDrag"/>
+ </Grid>
+ </Grid>
+</Window>
+
+
+
+
+
+
+
+
+
+

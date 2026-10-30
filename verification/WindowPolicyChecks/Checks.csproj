@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+<PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0-windows</TargetFramework><UseWPF>true</UseWPF><AllowUnsafeBlocks>true</AllowUnsafeBlocks><Nullable>enable</Nullable></PropertyGroup>
+<ItemGroup>
+<Compile Include="../../src/Delta.Native/NativeWindowMethods.cs" Link="NativeWindowMethods.cs"/>
+<Compile Include="../../src/Delta.Native/NativeWindowMethods.Keyboard.cs" Link="NativeWindowMethods.Keyboard.cs"/>
+<Compile Include="../../src/Delta.Native/NativeWindowMethods.Subsidiary.cs" Link="NativeWindowMethods.Subsidiary.cs"/>
+<Compile Include="../../src/Delta.Native/ApplicationWindowPolicy.cs" Link="ApplicationWindowPolicy.cs"/>
+</ItemGroup>
+</Project>
