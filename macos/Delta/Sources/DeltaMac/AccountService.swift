@@ -30,6 +30,14 @@ enum InstallationIdentity {
     }
 }
 
+// Match Windows' redirect policy; credentials are sent only to the fixed API URL.
+private final class AccountRedirectPolicy: NSObject, URLSessionTaskDelegate {
+    func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse,
+                    newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
+        completionHandler(nil)
+    }
+}
+
 actor AccountService {
     struct User: Decodable, Sendable { let username: String; let active: Bool; let disabled: Bool? }
     private struct Reply: Decodable { let token: String?; let user: User?; let error: String? }
@@ -38,7 +46,7 @@ actor AccountService {
     init() {
         let config = URLSessionConfiguration.ephemeral
         config.timeoutIntervalForRequest = 20; config.httpCookieStorage = nil
-        session = URLSession(configuration: config)
+        session = URLSession(configuration: config, delegate: AccountRedirectPolicy(), delegateQueue: nil)
     }
     private func request(_ path: String, body: [String: String]? = nil) async throws -> Reply {
         var request = URLRequest(url: URL(string: "https://delta.acranix.com/api/" + path)!)

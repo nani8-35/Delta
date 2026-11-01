@@ -8,13 +8,13 @@ APP="$OUTPUT/Delta Browser.app"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN_DIR/DeltaMac" "$APP/Contents/MacOS/DeltaMac"
 cp Packaging/Info.plist "$APP/Contents/Info.plist"
-# Cover both SwiftPM bundleURL and Cocoa resourceURL resource lookup layouts.
-find "$BIN_DIR" -maxdepth 1 -name '*.bundle' -type d -exec cp -R {} "$APP/" \;
-find "$BIN_DIR" -maxdepth 1 -name '*.bundle' -type d -exec cp -R {} "$APP/Contents/Resources/" \;
+# A conventional Cocoa resource layout is compatible with sealed app signatures.
+cp Sources/DeltaMac/Resources/EditorBridge.js "$APP/Contents/Resources/EditorBridge.js"
 plutil -lint "$APP/Contents/Info.plist"
 SIGNING_IDENTITY="${DELTA_SIGNING_IDENTITY:--}"
 codesign --force --deep --sign "$SIGNING_IDENTITY" "$APP"
 codesign --verify --deep --strict "$APP"
+"$APP/Contents/MacOS/DeltaMac" --verify-resources
 ARCH="$(uname -m)"
 ditto -c -k --sequesterRsrc --keepParent "$APP" "$OUTPUT/Delta-Mac-preview-0.1.0-$ARCH.zip"
 echo "Built $OUTPUT/Delta-Mac-preview-0.1.0-$ARCH.zip"

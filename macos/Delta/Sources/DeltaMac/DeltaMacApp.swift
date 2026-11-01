@@ -1,11 +1,21 @@
 import SwiftUI
 import AppKit
 import WebKit
+import Darwin
 
 @main
 @MainActor
 struct DeltaMacApp: App {
     @StateObject private var model = AppModel()
+    init() {
+        if CommandLine.arguments.contains("--verify-resources") {
+            guard let url = Bundle.main.url(forResource: "EditorBridge", withExtension: "js"),
+                  let script = try? String(contentsOf: url, encoding: .utf8), script.contains("function(action, text)") else {
+                fputs("Packaged editor bridge is missing.\n", stderr); exit(1)
+            }
+            print("Packaged editor bridge verified."); exit(0)
+        }
+    }
     var body: some Scene {
         WindowGroup("Delta Browser", id: "main") {
             Group {
@@ -145,7 +155,7 @@ private struct BrowserPane: View {
                 TextField("Address or search", text: $address).textFieldStyle(.roundedBorder).onSubmit { model.navigate(address) }
             }.padding(8)
             WebContent(tab: tab)
-        }.onAppear { address = tab.address }.onChange(of: tab.address) { address = $0 }
+        }.onAppear { address = tab.address }.onChange(of: tab.address) { address = tab.address }
     }
 }
 

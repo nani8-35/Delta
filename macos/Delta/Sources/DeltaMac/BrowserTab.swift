@@ -78,7 +78,8 @@ final class BrowserTab: NSObject, ObservableObject, Identifiable, WKNavigationDe
     func download(_ download: WKDownload, didFailWithError error: Error, resumeData: Data?) { onStatus?(error.localizedDescription) }
 
     func editor(_ action: String, text: String = "") async throws -> Any? {
-        guard let resource = Bundle.module.url(forResource: "EditorBridge", withExtension: "js") else {
+        guard let resource = Bundle.main.url(forResource: "EditorBridge", withExtension: "js")
+                ?? Bundle.module.url(forResource: "EditorBridge", withExtension: "js") else {
             throw AccountError.message("Editor bridge resource missing.")
         }
         let script = try String(contentsOf: resource, encoding: .utf8)

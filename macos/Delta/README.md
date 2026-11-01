@@ -20,7 +20,7 @@ bash scripts/build-app.sh
 open "dist/Delta Browser.app"
 ```
 
-Open `Package.swift` in Xcode for debugging. Run the `.app` for stable bundle identity, Keychain, and permission testing. The build script includes the processed JavaScript resource bundle in both SwiftPM and Cocoa lookup layouts. Builds use an ad-hoc signature by default; do not treat that as Developer ID signing/notarization or a public installer. Provide `DELTA_SIGNING_IDENTITY` only through your own secure signing environment. No Gatekeeper bypass instructions are provided.
+Open `Package.swift` in Xcode for debugging. Run the `.app` for stable bundle identity, Keychain, and permission testing. The build script puts the editor bridge in `Contents/Resources` and verifies it with `--verify-resources`. SwiftPM's resource bundle is used when running from the package. Builds use an ad-hoc signature by default; do not treat that as Developer ID signing/notarization or a public installer. Provide `DELTA_SIGNING_IDENTITY` only through your own secure signing environment. No Gatekeeper bypass instructions are provided.
 
 ## Permissions
 
